@@ -25,7 +25,7 @@ class BaseProducer(ABC):
         """Abstract method for data generation - implemented by subclasses."""
         pass
 
-    async def produce(self, interval: float = 0.1):
+    async def produce(self, interval: float = 1.0):
         """
         Template method: Main production loop.
         Generates data, sends to Kafka, sleeps with random jitter.
@@ -35,7 +35,9 @@ class BaseProducer(ABC):
             key = self.get_key(data)
             self.kafka_producer.send_message(self.topic, data, key)
             print(f"Produced to {self.topic}: {data}")
-            await asyncio.sleep(0)
+            jitter = interval * 0.2
+            sleep_duration = random.uniform(interval - jitter, interval + jitter)    
+            await asyncio.sleep(sleep_duration)
 
     def get_key(self, data: dict) -> str:
         """Hook method: Can be overridden for custom partitioning keys."""
