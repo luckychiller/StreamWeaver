@@ -5,7 +5,9 @@ Design Pattern: Observer - Consumer reacts to Kafka messages and notifies WebSoc
 """
 import asyncio
 import aiohttp
+import time # Import the time module for sleeping in the thread
 from datetime import datetime, timezone
+from asyncio import Queue
 from backend.common.kafka_client import KafkaConsumerClient
 from backend.common.config import Config
 
@@ -74,19 +76,55 @@ class StreamConsumer:
             Config.SERVER_LOGS_TOPIC: (self.transformer.transform_server_log, 'server_log')
         }
 
-    async def consume_and_process(self):
-        """Main processing loop: consume -> transform -> publish."""
+    def producer_loop(self, queue: Queue, loop: asyncio.AbstractEventLoop):
+        """
+        This is a SYNCHRONOUS function that runs in a separate thread.
+        It polls Kafka and puts messages onto the asyncio queue in a thread-safe way.
+        """
         while True:
             for message in self.consumer.poll_messages():
-                topic = message.topic
-                data = message.value
+                # Use run_coroutine_threadsafe to safely schedule the async queue.put
+                # operation on the main event loop.
+                future = asyncio.run_coroutine_threadsafe(queue.put(message), loop)
+                try:
+                    # Optionally wait for the put to complete, with a timeout
+                    future.result(timeout=1.0)
+                except asyncio.TimeoutError:
+                    print("Timeout: Failed to put message on the queue.")
 
-                transform_func, message_type = self.transform_map.get(topic, (lambda x: x, 'unknown'))
-                transformed_data = transform_func(data)
+            # A short sleep to prevent this thread from busy-waiting and consuming 100% CPU
+            # if poll_messages returns immediately with no messages.
+            time.sleep(0.01)
 
-                await self.publisher.publish(transformed_data, message_type)
-                print(f"Consumed and processed: {topic} -> {transformed_data}")
-            await asyncio.sleep(0.1)
+    async def worker(self, queue: Queue):
+        """Asynchronous worker that processes messages from the queue."""
+        while True:
+            message = await queue.get()
+            topic = message.topic
+            data = message.value
+            transform_func, message_type = self.transform_map.get(topic, (lambda x: x, 'unknown'))
+            transformed = transform_func(data)
+            await self.publisher.publish(transformed, message_type)
+            print(f"Worker processed: {topic} -> {transformed}")
+            queue.task_done()
+
+    async def consume_and_process(self):
+        """
+        Orchestrates the producer and workers.
+        """
+        queue = Queue(maxsize=100) # It's good practice to have a maxsize
+        loop = asyncio.get_running_loop()
+
+        # Run the synchronous producer_loop in a separate thread pool
+        producer_task = loop.run_in_executor(None, self.producer_loop, queue, loop)
+
+        # Create asynchronous workers to process messages concurrently
+        workers = [asyncio.create_task(self.worker(queue)) for _ in range(4)]
+
+        # The application will run until one of these tasks fails.
+        # You might want more robust error handling here for a production system.
+        await asyncio.gather(producer_task, *workers)
+
 
 async def main():
     consumer = StreamConsumer()

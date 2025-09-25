@@ -96,6 +96,16 @@ backend/
 2. Update `transform_map` in `StreamConsumer`
 3. Frontend will automatically handle new message types
 
+### Frontend Development
+The frontend is a React + TypeScript application using Vite. To run it standalone for development:
+
+1. Navigate to the `frontend/` directory
+2. Install dependencies: `npm install`
+3. Start the dev server: `npm run dev`
+4. Access at `http://localhost:5173`
+
+For full integration, use the Docker Compose setup which serves the frontend at `http://localhost:3000`.
+
 ## Performance
 
 The system is designed to handle 1000+ messages per second with low latency, suitable for real-time analytics and monitoring. Uses asyncio for concurrent processing and Kafka for scalable messaging.

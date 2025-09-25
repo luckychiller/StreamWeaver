@@ -1,20 +1,75 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# StreamWeaver Frontend
 
-# Run and deploy your AI Studio app
+The frontend component of StreamWeaver, a real-time data ingestion pipeline dashboard built with React, TypeScript, and Vite.
 
-This contains everything you need to run your app locally.
+## Overview
 
-View your app in AI Studio: https://ai.studio/apps/drive/1dI4us7es8ItExwqlfnZO0gWIdA-rLaRt
+This React application provides a real-time dashboard that visualizes data streams from the StreamWeaver backend, including:
+- Stock trades
+- Social media posts
+- Server logs
 
-## Run Locally
+The dashboard connects to the backend WebSocket server to receive live updates and displays them in an intuitive interface.
 
-**Prerequisites:**  Node.js
+## Features
 
+- Real-time data visualization
+- Modular component architecture
+- WebSocket integration for live updates
+- Responsive design
+- Type-safe development with TypeScript
+
+## Prerequisites
+
+- Node.js (version 16 or higher)
+- npm or yarn
+
+## Running Locally
 
 1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+   ```bash
+   npm install
+   ```
+
+2. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+3. Open your browser and navigate to `http://localhost:5173` (default Vite port).
+
+Note: For the full experience with live data, ensure the backend services are running. The frontend is typically run as part of the complete Docker Compose setup in the root directory.
+
+## Project Structure
+
+```
+frontend/
+├── components/          # Reusable UI components
+│   ├── ui/             # Basic UI elements
+│   └── ...             # Feature-specific components
+├── hooks/              # Custom React hooks
+├── utils/              # Utility functions
+├── public/             # Static assets
+└── types.ts            # TypeScript type definitions
+```
+
+## Building for Production
+
+To build the application for production:
+
+```bash
+npm run build
+```
+
+The built files will be in the `dist/` directory.
+
+## Development
+
+- Uses Vite for fast development and building
+- TypeScript for type safety
+- ESLint for code quality
+- Tailwind CSS for styling (if configured)
+
+## Connecting to Backend
+
+The frontend automatically connects to the WebSocket server at `ws://localhost:8080` when running. Ensure the backend WebSocket service is active for real-time data.
