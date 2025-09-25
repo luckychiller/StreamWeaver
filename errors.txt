@@ -1,0 +1,134 @@
+PS E:\StreamWeaver> docker-compose up --build
+Compose can now delegate builds to bake for better performance.
+ To do so, set COMPOSE_BAKE=true.
+2025/09/25 00:41:55 http2: server: error reading preface from client //./pipe/dockerDesktopLinuxEngine: file has already been closed
+[+] Building 7.0s (55/68)                                                                                          docker:desktop-linux
+ => [stock_producer internal] load build definition from Dockerfile                                                                0.0s
+ => => transferring dockerfile: 1.06kB                                                                                             0.0s 
+ => [social_producer internal] load build definition from Dockerfile                                                               0.1s 
+ => => transferring dockerfile: 1.06kB                                                                                             0.0s 
+ => [log_producer internal] load build definition from Dockerfile                                                                  0.0s 
+ => => transferring dockerfile: 1.06kB                                                                                             0.0s 
+ => [stream_consumer internal] load build definition from Dockerfile                                                               0.1s 
+ => => transferring dockerfile: 950B                                                                                               0.0s 
+ => [websocket_server internal] load metadata for docker.io/library/python:3.11-slim                                               2.0s 
+ => [stock_producer internal] load .dockerignore                                                                                   0.1s
+ => => transferring context: 2B                                                                                                    0.0s 
+ => [social_producer internal] load .dockerignore                                                                                  0.0s 
+ => => transferring context: 2B                                                                                                    0.0s
+ => [stream_consumer internal] load .dockerignore                                                                                  0.1s 
+ => => transferring context: 2B                                                                                                    0.0s 
+ => [log_producer internal] load .dockerignore                                                                                     0.1s 
+ => => transferring context: 2B                                                                                                    0.0s 
+ => [websocket_server 1/5] FROM docker.io/library/python:3.11-slim@sha256:a0939570b38cddeb861b8e75d20b1c8218b21562b18f301171904b5  0.1s 
+ => => resolve docker.io/library/python:3.11-slim@sha256:a0939570b38cddeb861b8e75d20b1c8218b21562b18f301171904b544e8cf228          0.0s 
+ => [social_producer internal] load build context                                                                                  0.0s 
+ => => transferring context: 5.65kB                                                                                                0.0s 
+ => [log_producer internal] load build context                                                                                     0.1s 
+ => => transferring context: 5.65kB                                                                                                0.0s 
+ => [stream_consumer internal] load build context                                                                                  0.2s 
+ => => transferring context: 646.99kB                                                                                              0.2s 
+ => [stock_producer internal] load build context                                                                                   0.2s 
+ => => transferring context: 5.65kB                                                                                                0.0s 
+ => CACHED [websocket_server 2/5] WORKDIR /app                                                                                     0.0s 
+ => CACHED [social_producer 3/8] COPY ./backend/producers/stock/requirements.txt /app/requirements.txt                             0.0s 
+ => CACHED [social_producer 4/8] RUN apt-get update &&     apt-get install -y default-jre &&     pip install --no-cache-dir -r re  0.0s 
+ => CACHED [social_producer 5/8] RUN apt-get install -y wget &&     wget https://archive.apache.org/dist/kafka/3.6.1/kafka_2.13-3  0.0s 
+ => CACHED [social_producer 6/8] COPY ./scripts/wait-for-kafka.sh /usr/local/bin/wait-for-kafka.sh                                 0.0s 
+ => CACHED [stock_producer 7/8] RUN chmod +x /usr/local/bin/wait-for-kafka.sh                                                      0.0s 
+ => [stock_producer 8/8] COPY ./backend /app/backend                                                                               0.1s 
+ => CACHED [stream_consumer 3/8] COPY backend/consumer/requirements.txt .                                                          0.0s 
+ => CACHED [stream_consumer 4/8] RUN apt-get update &&     apt-get install -y default-jre &&     pip install --no-cache-dir -r re  0.0s 
+ => CACHED [stream_consumer 5/8] RUN apt-get install -y wget &&     wget https://archive.apache.org/dist/kafka/3.6.1/kafka_2.13-3  0.0s 
+ => CACHED [stream_consumer 6/8] COPY ./scripts/wait-for-kafka.sh /usr/local/bin/wait-for-kafka.sh                                 0.0s 
+ => CACHED [stream_consumer 7/8] RUN chmod +x /usr/local/bin/wait-for-kafka.sh                                                     0.0s 
+ => [stream_consumer 8/8] COPY . /app                                                                                              0.1s 
+ => [log_producer] exporting to image                                                                                              0.8s 
+ => => exporting layers                                                                                                            0.1s 
+ => => exporting manifest sha256:1599a68f13c7ae479d7d613c4db0c4de2f6c3eae4c57703feb3c12853e209bcf                                  0.1s 
+ => => exporting config sha256:3747f1345cf43b4174100fb72d4d9430845b1d9af1e8b556e47694db09ae849c                                    0.1s 
+ => => exporting attestation manifest sha256:994536a4395aacfa0e7ef29a21e7e2e8d593297a9dce2a17ad1e8bc5a434af36                      0.2s 
+ => => exporting manifest list sha256:eb8652f3274d25674fc6bcc38c410cc68d7637c923dd3366617c0bc3f258d6b1                             0.1s 
+ => => naming to docker.io/library/streamweaver-log_producer:latest                                                                0.0s 
+ => => unpacking to docker.io/library/streamweaver-log_producer:latest                                                             0.1s 
+ => [stock_producer] exporting to image                                                                                            0.7s 
+ => => exporting layers                                                                                                            0.1s 
+ => => exporting manifest sha256:ccc95f5949637714be494e3829a5930996a2ed29ef13aadfc9bf997b7a5c4f7f                                  0.1s 
+ => => exporting config sha256:411f7dd7478393f7548739947f28dc22a17b35489ac6b6faf15e6039b12cc6ec                                    0.0s 
+ => => exporting attestation manifest sha256:0ff8204e04f6afb0bfca0637c43ae888286be56b009c36bc454c1d4f432ad628                      0.2s 
+ => => exporting manifest list sha256:0fdae35204bcf28777fbe39be64e41be4e6b42dee55e3b0e18b058179c747b71                             0.0s 
+ => => naming to docker.io/library/streamweaver-stock_producer:latest                                                              0.0s 
+ => => unpacking to docker.io/library/streamweaver-stock_producer:latest                                                           0.1s 
+ => [social_producer] exporting to image                                                                                           0.7s 
+ => => exporting layers                                                                                                            0.1s 
+ => => exporting manifest sha256:de2d4cf2dbf2cfc5b4fde2beee651ea52a6c8e5fa4f5b87ca258d2ede0f8dc36                                  0.1s 
+ => => exporting config sha256:fe4f152dccd96595bdf0d5536bbfa3482014ba0a8f21dd1a8ced751fa51e0fe2                                    0.1s 
+ => => exporting attestation manifest sha256:acb2d43ddce4ffe4e8a0c5b57c0c04bdd7cfe9d402b68ee8ba4504f387df765e                      0.2s 
+ => => exporting manifest list sha256:a39e46a5e8d7997f2088cece7351224638e751b7017cd514eed2b42bdcccba55                             0.1s 
+ => => naming to docker.io/library/streamweaver-social_producer:latest                                                             0.0s 
+ => => unpacking to docker.io/library/streamweaver-social_producer:latest                                                          0.1s 
+ => [stream_consumer] exporting to image                                                                                           0.9s 
+ => => exporting layers                                                                                                            0.3s 
+ => => exporting manifest sha256:7099d205af5304dbb303538b1834aba531e5b5dc0b8d6166756a3c6b781e35a0                                  0.1s 
+ => => exporting config sha256:f4cc8d1172a3457da80b22195d92f4f4a3bbfa07ad732ef73773c0e0edffe4d8                                    0.1s 
+ => => exporting attestation manifest sha256:6fb0f7fee3f5c0280eb34c0ce24e9445c249a458c4a94917542203f4e667c2f8                      0.1s 
+ => => exporting manifest list sha256:7e69ddfa189b2a693d9a298fd11a3014d55a80cfb9d02c1ccaeef83a0cb13b85                             0.1s 
+ => => naming to docker.io/library/streamweaver-stream_consumer:latest                                                             0.0s 
+ => => unpacking to docker.io/library/streamweaver-stream_consumer:latest                                                          0.1s 
+ => [stock_producer] resolving provenance for metadata file                                                                        0.3s 
+ => [social_producer] resolving provenance for metadata file                                                                       0.3s 
+ => [log_producer] resolving provenance for metadata file                                                                          0.2s 
+ => [stream_consumer] resolving provenance for metadata file                                                                       0.0s 
+ => [websocket_server internal] load build definition from Dockerfile                                                              0.0s 
+ => => transferring dockerfile: 209B                                                                                               0.0s 
+ => [websocket_server internal] load .dockerignore                                                                                 0.0s 
+ => => transferring context: 2B                                                                                                    0.0s 
+ => [websocket_server internal] load build context                                                                                 0.0s 
+ => => transferring context: 66B                                                                                                   0.0s 
+ => CACHED [websocket_server 3/5] COPY requirements.txt .                                                                          0.0s 
+ => CACHED [websocket_server 4/5] RUN pip install --no-cache-dir -r requirements.txt                                               0.0s 
+ => CACHED [websocket_server 5/5] COPY server.py .                                                                                 0.0s 
+ => [websocket_server] exporting to image                                                                                          0.1s 
+ => => exporting layers                                                                                                            0.0s 
+ => => exporting manifest sha256:7e629809a2bc2f1ceae45f8f43282a648219b62ddbb7cbff9ef4ea4fe82a3235                                  0.0s 
+ => => exporting config sha256:8623c20d55ec64750108656e449c7a9d007d0fcae5d167f4efb0e8ba0864d26f                                    0.0s 
+ => => exporting attestation manifest sha256:423b3a891c209b9d6f69e44613c8991fb4b98fc932c0cb525c6d1549d6edd37d                      0.1s 
+ => => exporting manifest list sha256:02f0d108e25928352ba0d9738c08d19a3273d43de1800a9589bc5427f667952e                             0.0s 
+ => => naming to docker.io/library/streamweaver-websocket_server:latest                                                            0.0s 
+ => => unpacking to docker.io/library/streamweaver-websocket_server:latest                                                         0.0s 
+ => [websocket_server] resolving provenance for metadata file                                                                      0.0s 
+ => [web_dashboard internal] load build definition from Dockerfile                                                                 0.0s 
+ => => transferring dockerfile: 293B                                                                                               0.0s 
+ => WARN: FromAsCasing: 'as' and 'FROM' keywords' casing do not match (line 1)                                                     0.0s 
+ => [web_dashboard internal] load metadata for docker.io/library/nginx:alpine                                                      1.4s 
+ => [web_dashboard internal] load metadata for docker.io/library/node:18-alpine                                                    1.5s 
+ => [web_dashboard internal] load .dockerignore                                                                                    0.0s 
+ => => transferring context: 2B                                                                                                    0.0s 
+ => [web_dashboard build 1/6] FROM docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a35cb9bc  0.0s 
+ => => resolve docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a35cb9bc4b8ca09d9e            0.0s 
+ => [web_dashboard stage-1 1/2] FROM docker.io/library/nginx:alpine@sha256:42a516af16b852e33b7682d5ef8acbd5d13fe08fecadc7ed98605b  0.0s 
+ => => resolve docker.io/library/nginx:alpine@sha256:42a516af16b852e33b7682d5ef8acbd5d13fe08fecadc7ed98605ba5e3b26ab8              0.0s 
+ => [web_dashboard internal] load build context                                                                                    0.0s 
+ => => transferring context: 872B                                                                                                  0.0s 
+ => CACHED [web_dashboard build 2/6] WORKDIR /app/frontend                                                                         0.0s 
+ => CACHED [web_dashboard build 3/6] COPY package*.json ./                                                                         0.0s 
+ => CACHED [web_dashboard build 4/6] RUN npm install                                                                               0.0s 
+ => CACHED [web_dashboard build 5/6] COPY . /app                                                                                   0.0s 
+ => ERROR [web_dashboard build 6/6] RUN npm run build                                                                              0.8s 
+------
+ > [web_dashboard build 6/6] RUN npm run build:
+0.462
+0.462 > streamweaver-real-time-dashboard@0.0.0 build
+0.462 > vite build
+0.462
+0.673 vite v6.3.6 building for production...
+0.727 ✓ 0 modules transformed.
+0.730 ✗ Build failed in 21ms
+0.730 error during build:
+0.730 Could not resolve entry module "index.html".
+0.730     at getRollupError (file:///app/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+0.730     at error (file:///app/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+0.730     at ModuleLoader.loadEntryModule (file:///app/frontend/node_modules/rollup/dist/es/shared/node-entry.js:21585:20)
+0.730     at async Promise.all (index 0)
+------
+failed to solve: process "/bin/sh -c npm run build" did not complete successfully: exit code: 1

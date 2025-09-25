@@ -1,0 +1,5 @@
+{
+  "name": "Streamweaver Real-Time Dashboard",
+  "description": "A real-time dashboard that connects to a WebSocket server to receive and visualize three distinct data streams: Stock Trades, Social Media Posts, and Server Logs, using dynamic and live-updating visualizations.",
+  "requestFramePermissions": []
+}

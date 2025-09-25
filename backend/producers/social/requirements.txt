@@ -1,0 +1,6 @@
+kafka-python
+websockets
+asyncio-mqtt
+faker
+pytz
+aiohttp

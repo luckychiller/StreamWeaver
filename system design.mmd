@@ -1,0 +1,66 @@
+graph TD
+    subgraph "Common Module (SOLID Patterns)"
+        CONFIG[Config<br/>Singleton Pattern]
+        MODELS[Data Models<br/>DTO Pattern]
+        KAFKA_CLIENT[Kafka Client<br/>Facade Pattern]
+    end
+
+    subgraph "Data Producers (Template Method + Abstract Factory)"
+        BASE_PRODUCER[BaseProducer<br/>Abstract Template]
+        STOCK_PRODUCER[StockTradeProducer<br/>Concrete Implementation] --> BASE_PRODUCER
+        SOCIAL_PRODUCER[SocialMediaProducer<br/>Concrete Implementation] --> BASE_PRODUCER
+        LOG_PRODUCER[ServerLogProducer<br/>Concrete Implementation] --> BASE_PRODUCER
+
+        BASE_PRODUCER --> CONFIG
+        BASE_PRODUCER --> KAFKA_CLIENT
+    end
+
+    subgraph "Messaging Backbone"
+        KAFKA(Apache Kafka Cluster)
+        subgraph "Kafka Internals"
+            Z(Zookeeper)
+        end
+        KAFKA --> Z
+    end
+
+    STOCK_PRODUCER --> KAFKA
+    SOCIAL_PRODUCER --> KAFKA
+    LOG_PRODUCER --> KAFKA
+
+    subgraph "Consumer (Strategy + Observer Patterns)"
+        DATA_TRANSFORMER[DataTransformer<br/>Strategy Pattern]
+        WS_PUBLISHER[WebSocketPublisher]
+        STREAM_CONSUMER[StreamConsumer<br/>Observer Pattern]
+
+        STREAM_CONSUMER --> DATA_TRANSFORMER
+        STREAM_CONSUMER --> WS_PUBLISHER
+        STREAM_CONSUMER --> KAFKA_CLIENT
+    end
+
+    STREAM_CONSUMER -- reads from --> KAFKA
+
+    subgraph "Real-time Distribution"
+        WEBSOCKET_SERVER[WebSocket Server]
+        WS_PUBLISHER -- publishes to --> WEBSOCKET_SERVER
+    end
+
+    subgraph "Presentation Layer"
+        DASHBOARD[Web Dashboard<br/>React + TypeScript]
+        DASHBOARD -- WebSocket connection --> WEBSOCKET_SERVER
+    end
+
+    %% Styling
+    style KAFKA fill:#f9f,stroke:#333,stroke-width:2px
+    style Z fill:#ccf,stroke:#333,stroke-width:2px
+    style CONFIG fill:#ffe,stroke:#333,stroke-width:1px
+    style MODELS fill:#ffe,stroke:#333,stroke-width:1px
+    style KAFKA_CLIENT fill:#ffe,stroke:#333,stroke-width:1px
+    style BASE_PRODUCER fill:#afa,stroke:#333,stroke-width:2px
+    style STOCK_PRODUCER fill:#afa,stroke:#333,stroke-width:1px
+    style SOCIAL_PRODUCER fill:#afa,stroke:#333,stroke-width:1px
+    style LOG_PRODUCER fill:#afa,stroke:#333,stroke-width:1px
+    style DATA_TRANSFORMER fill:#ffa,stroke:#333,stroke-width:1px
+    style WS_PUBLISHER fill:#ffa,stroke:#333,stroke-width:1px
+    style STREAM_CONSUMER fill:#ffa,stroke:#333,stroke-width:2px
+    style WEBSOCKET_SERVER fill:#fcc,stroke:#333,stroke-width:2px
+    style DASHBOARD fill:#cfc,stroke:#333,stroke-width:2px
