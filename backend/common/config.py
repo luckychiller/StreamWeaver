@@ -17,8 +17,12 @@ class Config:
     SERVICES = ['auth_api', 'user_service', 'payment_gateway', 'notification_service', 'data_processor']
     LEVELS = ['INFO', 'WARN', 'ERROR', 'DEBUG']
     SENTIMENTS = ['positive', 'neutral', 'negative']
-
+    CONGESTION_LEVEL =  ["light", "moderate", "heavy", "severe"]
+    TRAFFIC_DIRECTION = ["northbound", "southbound", "eastbound", "westbound"]
+    TRAFFIC_LOCATION = ["brooklyn_bridge", "Manhattan", "queens_crossing", "bronx_highway", "staten_island_ferry"]
+    
     # Topics
     STOCK_TRADES_TOPIC = 'stock_trades'
     SOCIAL_FEED_TOPIC = 'social_feed'
     SERVER_LOGS_TOPIC = 'server_logs'
+    TRAFFIC_DATA_TOPIC = 'traffic_data'

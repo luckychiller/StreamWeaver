@@ -31,7 +31,22 @@ export interface ServerLogPayload {
   ip: string;
 }
 
+export interface TrafficDataPayload {
+  timestamp: string;
+  location_id: string;
+  vehicle_count: number;
+  average_speed: number;
+  congestion_level: 'light' | 'moderate' | 'heavy' | 'severe';
+  direction: 'northbound' | 'southbound' | 'eastbound' | 'westbound';
+  occupancy_rate: number;
+  headway_seconds: number;
+  weather_condition: string;
+  visibility_miles: number;
+  precipitation_inches: number;
+}
+
 export type WebSocketMessage =
   | { type: 'stock_trade'; payload: StockTradePayload }
   | { type: 'social_post'; payload: SocialPostPayload }
-  | { type: 'server_log'; payload: ServerLogPayload };
+  | { type: 'server_log'; payload: ServerLogPayload }
+  | { type: 'traffic_data'; payload: TrafficDataPayload };

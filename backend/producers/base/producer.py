@@ -64,8 +64,8 @@ class StockTradeProducer(BaseProducer):
         }
 
     def get_key(self, data: dict) -> str:
-        """Use stock symbol as partition key for topic ordering."""
-        return data['symbol']
+        """Hook method: Can be overridden for custom partitioning keys."""
+        return None
 
 class SocialMediaProducer(BaseProducer):
     def __init__(self):
@@ -104,3 +104,75 @@ class ServerLogProducer(BaseProducer):
 
     def get_key(self, data: dict) -> str:
         return data['service']
+    
+
+class TrafficProducer(BaseProducer):
+    """
+    Concrete implementation for traffic data production.
+    Generates realistic stock trading data with timestamps and market symbols.
+    """
+    def __init__(self):
+        super().__init__(Config.TRAFFIC_DATA_TOPIC)
+
+    def _generate_weather_condition(self, timestamp: datetime) -> tuple[str, float, float]:
+        """Generate realistic weather conditions."""
+        # Simple weather simulation - in reality this would use weather APIs
+        month = timestamp.month
+
+        # Winter months (Dec-Feb) - higher chance of snow/cold
+        if month in [12, 1, 2]:
+            weather_roll = random.random()
+            if weather_roll < 0.3:
+                return "snow", random.uniform(0.1, 8.0), 0.0
+            elif weather_roll < 0.5:
+                return "extreme_cold", 10.0, 0.0
+            elif weather_roll < 0.7:
+                return "cloudy", random.uniform(5.0, 10.0), 0.0
+            else:
+                return "clear", 10.0, 0.0
+
+        # Summer months (Jun-Aug) - higher chance of heat/rain
+        elif month in [6, 7, 8]:
+            weather_roll = random.random()
+            if weather_roll < 0.2:
+                return "extreme_heat", random.uniform(0.1, 5.0), 0.0
+            elif weather_roll < 0.4:
+                return "heavy_rain", 10.0, random.uniform(0.5, 2.0)
+            elif weather_roll < 0.6:
+                return "light_rain", 10.0, random.uniform(0.1, 0.4)
+            else:
+                return "clear", 10.0, 0.0
+
+        # Other months - moderate weather
+        else:
+            weather_roll = random.random()
+            if weather_roll < 0.1:
+                return "light_rain", 10.0, random.uniform(0.1, 0.3)
+            elif weather_roll < 0.2:
+                return "fog", random.uniform(0.5, 2.0), 0.0
+            else:
+                return "clear", 10.0, 0.0
+
+    def generate_data(self) -> dict:
+        """Generate a single traffic data record."""        
+        timestamp = datetime.utcnow()
+        # Generate weather conditions
+        weather_condition, visibility, precipitation = self._generate_weather_condition(timestamp)
+
+        return {
+            "timestamp": datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
+            "location_id":random.choice(Config.TRAFFIC_LOCATION),
+            "vehicle_count":random.randint(0,100),
+            "average_speed":random.uniform(1, 100) ,
+            "congestion_level":random.choice(Config.CONGESTION_LEVEL),
+            "direction":random.choice(Config.TRAFFIC_DIRECTION),
+            "occupancy_rate":random.randint(0,100),
+            "headway_seconds":random.randint(0,100),
+            "weather_condition":weather_condition,
+            "visibility_miles":visibility,
+            "precipitation_inches":precipitation
+        }
+
+    def get_key(self, data: dict) -> str:
+        """Use location_id as partition key for topic ordering."""
+        return data['location_id']

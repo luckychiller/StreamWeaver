@@ -4,13 +4,15 @@ import Header from './components/Header';
 import StockTradesPanel from './components/StockTradesPanel';
 import SocialFeedPanel from './components/SocialFeedPanel';
 import ServerLogsPanel from './components/ServerLogsPanel';
-import { MAX_STOCK_TRADES, MAX_SOCIAL_POSTS, MAX_SERVER_LOGS, WEBSOCKET_URL } from './constants';
-import type { WebSocketMessage, StockTradePayload, SocialPostPayload, ServerLogPayload } from './types';
+import TrafficDataPanel from './components/TrafficDataPanel';
+import { MAX_STOCK_TRADES, MAX_SOCIAL_POSTS, MAX_SERVER_LOGS, MAX_TRAFFIC_DATA, WEBSOCKET_URL } from './constants';
+import type { WebSocketMessage, StockTradePayload, SocialPostPayload, ServerLogPayload, TrafficDataPayload } from './types';
 
 const App: React.FC = () => {
   const [stockTrades, setStockTrades] = useState<StockTradePayload[]>([]);
   const [socialPosts, setSocialPosts] = useState<SocialPostPayload[]>([]);
   const [serverLogs, setServerLogs] = useState<ServerLogPayload[]>([]);
+  const [trafficData, setTrafficData] = useState<TrafficDataPayload[]>([]);
   const [messageCount, setMessageCount] = useState(0);
   const [dataRate, setDataRate] = useState(0);
   const messageCountRef = useRef(0);
@@ -25,6 +27,9 @@ const App: React.FC = () => {
         break;
       case 'server_log':
         setServerLogs(prev => [message.payload, ...prev].slice(0, MAX_SERVER_LOGS));
+        break;
+      case 'traffic_data':
+        setTrafficData(prev => [message.payload, ...prev].slice(0, MAX_TRAFFIC_DATA));
         break;
     }
     messageCountRef.current += 1;
@@ -50,6 +55,9 @@ const App: React.FC = () => {
           </div>
           <div className="xl:col-span-1">
             <SocialFeedPanel posts={socialPosts} />
+          </div>
+          <div className="xl:col-span-3">
+            <TrafficDataPanel trafficData={trafficData} />
           </div>
           <div className="xl:col-span-3">
             <ServerLogsPanel logs={serverLogs} />

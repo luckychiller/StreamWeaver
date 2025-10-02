@@ -24,6 +24,12 @@ class DataTransformer:
         return data
 
     @staticmethod
+    def transform_traffic_data(data):
+        """Transform traffic data: add processing timestamp and placeholder analytics."""
+        data['processed_timestamp'] = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+        return data
+
+    @staticmethod
     def transform_social_post(data):
         """Transform social post data: add processing timestamp and hashtag analysis."""
         data['processed_timestamp'] = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%fZ')
@@ -63,7 +69,7 @@ class StreamConsumer:
     """
     def __init__(self):
         self.consumer = KafkaConsumerClient(
-            topics=[Config.STOCK_TRADES_TOPIC, Config.SOCIAL_FEED_TOPIC, Config.SERVER_LOGS_TOPIC],
+            topics=[Config.STOCK_TRADES_TOPIC, Config.SOCIAL_FEED_TOPIC, Config.SERVER_LOGS_TOPIC, Config.TRAFFIC_DATA_TOPIC],
             group_id='stream_consumer_group'
         )
         self.transformer = DataTransformer()
@@ -73,7 +79,8 @@ class StreamConsumer:
         self.transform_map = {
             Config.STOCK_TRADES_TOPIC: (self.transformer.transform_stock_trade, 'stock_trade'),
             Config.SOCIAL_FEED_TOPIC: (self.transformer.transform_social_post, 'social_post'),
-            Config.SERVER_LOGS_TOPIC: (self.transformer.transform_server_log, 'server_log')
+            Config.SERVER_LOGS_TOPIC: (self.transformer.transform_server_log, 'server_log'),
+            Config.TRAFFIC_DATA_TOPIC: (self.transformer.transform_traffic_data, 'traffic_data')
         }
 
     def producer_loop(self, queue: Queue, loop: asyncio.AbstractEventLoop):

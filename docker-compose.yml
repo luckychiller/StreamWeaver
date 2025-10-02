@@ -26,7 +26,7 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-      KAFKA_CREATE_TOPICS: "stock_trades:1:1,social_feed:1:1,server_logs:1:1"
+      KAFKA_CREATE_TOPICS: "stock_trades:1:1,social_feed:1:1,server_logs:1:1,traffic_data:1:1"
     healthcheck:
       test: ["CMD-SHELL", "kafka-topics --bootstrap-server kafka:9092 --list"]
       interval: 10s
@@ -39,6 +39,17 @@ services:
       context: .
       dockerfile: ./backend/producers/Dockerfile
     command: ["wait-for-kafka.sh", "kafka:29092", "python", "-m", "backend.producers.stock.producer"]
+    depends_on:
+      kafka:
+        condition: service_healthy
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+
+  traffic_producer:
+    build:
+      context: .
+      dockerfile: ./backend/producers/Dockerfile
+    command: ["wait-for-kafka.sh", "kafka:29092", "python", "-m", "backend.producers.traffic.producer"]
     depends_on:
       kafka:
         condition: service_healthy
