@@ -10,7 +10,6 @@ from datetime import datetime, timezone
 from ...common.kafka_client import KafkaProducerClient
 from ...common.config import Config
 
-
 class BaseProducer(ABC):
     """
     Abstract base class for all data producers.

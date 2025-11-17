@@ -6,7 +6,7 @@ WORKDIR /app
 COPY backend/consumer/requirements.txt .
 RUN apt-get update && \
     apt-get install -y default-jre kcat && \
-    pip install --no-cache-dir -r requirements.txt
+    pip install -r requirements.txt
 
 ENV KAFKA_VERSION=3.6.1
 ENV SCALA_VERSION=2.13

@@ -129,7 +129,6 @@ class StreamConsumer:
         workers = [asyncio.create_task(self.worker(queue)) for _ in range(4)]
 
         # The application will run until one of these tasks fails.
-        # You might want more robust error handling here for a production system.
         await asyncio.gather(producer_task, *workers)
 
 
